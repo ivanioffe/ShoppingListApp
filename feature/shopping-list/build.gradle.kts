@@ -38,11 +38,11 @@ android {
 
 dependencies {
 
-    implementation(project(":core:common"))
-    implementation(project(":core:database"))
-    implementation(project(":core:designsystem"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:network"))
+    implementation(projects.core.common)
+    implementation(projects.core.database)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.network)
+    implementation(projects.core.ui)
 
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))

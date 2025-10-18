@@ -36,9 +36,9 @@ android {
 
 dependencies {
 
-    implementation(project(":core:database"))
-    implementation(project(":feature:shopping-list"))
-    implementation(project(":feature:shopping-item"))
+    implementation(projects.core.database)
+    implementation(projects.feature.shoppingList)
+    implementation(projects.feature.shoppingItem)
 
     implementation(libs.androidx.core.ktx)
 

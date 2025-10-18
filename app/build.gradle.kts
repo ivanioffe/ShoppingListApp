@@ -45,14 +45,14 @@ android {
 
 dependencies {
 
-    implementation(project(":core:designsystem"))
-    implementation(project(":core:ui"))
+    implementation(projects.core.designsystem)
+    implementation(projects.core.ui)
 
-    implementation(project(":feature:login"))
-    implementation(project(":feature:shopping-list"))
-    implementation(project(":feature:shopping-item"))
+    implementation(projects.feature.login)
+    implementation(projects.feature.shoppingList)
+    implementation(projects.feature.shoppingItem)
 
-    implementation(project(":sync"))
+    implementation(projects.sync)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
