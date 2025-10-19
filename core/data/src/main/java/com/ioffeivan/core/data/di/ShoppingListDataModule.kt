@@ -17,9 +17,4 @@ interface ShoppingListDataModuleBinder {
     fun bindShoppingListRepository(
         impl: ShoppingListRepositoryImpl
     ): ShoppingListRepository
-
-    @Binds
-    fun bindShoppingListSyncRepository(
-        impl: ShoppingListSyncRepositoryImpl
-    ): ShoppingListSyncRepository
 }
