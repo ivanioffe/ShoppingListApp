@@ -5,6 +5,7 @@ import com.ioffeivan.core.data.mapper.toDomain
 import com.ioffeivan.core.data.mapper.toEntities
 import com.ioffeivan.core.data.mapper.toEntity
 import com.ioffeivan.core.data.source.local.ShoppingItemLocalDataSource
+import com.ioffeivan.core.data.source.local.ShoppingListLocalDataSource
 import com.ioffeivan.core.data.source.remote.ShoppingItemRemoteDataSource
 import com.ioffeivan.core.database.dao.ShoppingItemOutboxDao
 import com.ioffeivan.core.database.model.ShoppingItemEntity
@@ -23,31 +24,34 @@ class ShoppingItemRepositoryImpl @Inject constructor(
     private val shoppingItemRemoteDataSource: ShoppingItemRemoteDataSource,
     private val shoppingItemLocalDataSource: ShoppingItemLocalDataSource,
     private val shoppingItemOutboxDao: ShoppingItemOutboxDao,
+    private val shoppingListLocalDataSource: ShoppingListLocalDataSource,
 ) : ShoppingItemRepository {
 
     private val remoteShoppingItemsFlow = MutableSharedFlow<Result<ShoppingItems>>(replay = 1)
 
-    override suspend fun refreshShoppingItems(listLocalId: Int, listServerId: Int) {
-        shoppingItemRemoteDataSource.getShoppingItems(listServerId)
-            .collect { result ->
-                when (result) {
-                    is Result.Error -> remoteShoppingItemsFlow.emit(Result.Error(result.message))
+    override suspend fun refreshShoppingItems(listId: Int) {
+        val shoppingListServerId = shoppingListLocalDataSource.getShoppingList(listId).serverId
 
-                    Result.Loading -> remoteShoppingItemsFlow.emit(Result.Loading)
+        if (shoppingListServerId != null) {
+            shoppingItemRemoteDataSource.getShoppingItems(shoppingListServerId)
+                .collect { result ->
+                    when (result) {
+                        is Result.Error -> remoteShoppingItemsFlow.emit(Result.Error(result.message))
 
-                    is Result.Success -> {
-                        shoppingItemLocalDataSource.upsertShoppingItems(
-                            result.data.toEntities(listLocalId)
-                        )
+                        Result.Loading -> remoteShoppingItemsFlow.emit(Result.Loading)
+
+                        is Result.Success -> {
+                            shoppingItemLocalDataSource.upsertShoppingItems(
+                                result.data.toEntities(listId)
+                            )
+                        }
                     }
                 }
-            }
+        }
     }
 
     override suspend fun addShoppingItem(shoppingItem: ShoppingItem) {
-        val id = shoppingItemLocalDataSource.upsertShoppingItem(
-            shoppingItem.toEntity()
-        )
+        val id = shoppingItemLocalDataSource.upsertShoppingItem(shoppingItem.toEntity())
         shoppingItemOutboxDao.insertShoppingItemOutbox(
             shoppingItemOutboxEntity = ShoppingItemOutboxEntity(
                 itemId = id.toInt(),
