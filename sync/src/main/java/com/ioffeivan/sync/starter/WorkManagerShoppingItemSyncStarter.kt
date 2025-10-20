@@ -7,8 +7,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ioffeivan.core.data.sync.ShoppingItemSyncStarter
 import com.ioffeivan.sync.worker.ShoppingItemSyncWorker
+import javax.inject.Inject
 
-class WorkManagerShoppingItemSyncStarter(
+class WorkManagerShoppingItemSyncStarter @Inject constructor(
     private val workManager: WorkManager,
 ) : ShoppingItemSyncStarter {
 
