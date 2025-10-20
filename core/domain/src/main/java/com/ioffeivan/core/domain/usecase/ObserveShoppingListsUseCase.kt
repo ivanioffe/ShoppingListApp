@@ -9,7 +9,6 @@ import javax.inject.Inject
 class ObserveShoppingListsUseCase @Inject constructor(
     private val shoppingListRepository: ShoppingListRepository,
 ) {
-
     operator fun invoke(): Flow<Result<ShoppingLists>> {
         return shoppingListRepository.observeShoppingLists()
     }

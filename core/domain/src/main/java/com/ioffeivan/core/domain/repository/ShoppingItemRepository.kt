@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShoppingItemRepository {
 
-    suspend fun refreshShoppingItems(listLocalId: Int, listServerId: Int)
+    suspend fun refreshShoppingItems(listId: Int)
 
     suspend fun addShoppingItem(shoppingItem: ShoppingItem)
 
