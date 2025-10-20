@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.ioffeivan.core.designsystem.icon.PrimaryIcon
 import com.ioffeivan.core.designsystem.icon.PrimaryIcons
 import com.ioffeivan.core.designsystem.preview.PreviewContainer
-import com.ioffeivan.feature.shopping_list.domain.model.ShoppingList
+import com.ioffeivan.core.model.ShoppingList
 import com.ioffeivan.feature.shopping_list.presentation.shopping_lists.ShoppingListsColors
 
 @Composable

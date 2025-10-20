@@ -34,11 +34,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ioffeivan.core.designsystem.component.AddFloatingActionButton
 import com.ioffeivan.core.designsystem.icon.PrimaryIcon
 import com.ioffeivan.core.designsystem.icon.PrimaryIcons
+import com.ioffeivan.core.model.ShoppingList
 import com.ioffeivan.core.ui.LoadingScreen
 import com.ioffeivan.core.ui.ObserveAsEventsWithLifecycle
 import com.ioffeivan.core.ui.onDebounceClick
 import com.ioffeivan.feature.shopping_list.R
-import com.ioffeivan.feature.shopping_list.domain.model.ShoppingList
 import com.ioffeivan.feature.shopping_list.presentation.shopping_lists.component.ShoppingListItem
 
 @Composable
