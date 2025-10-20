@@ -8,12 +8,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import com.ioffeivan.core.database.dao.ShoppingItemDao
 import com.ioffeivan.core.database.dao.ShoppingItemOutboxDao
-import com.ioffeivan.core.database.dao.ShoppingListDao
 import com.ioffeivan.core.database.model.ShoppingItemOutboxOperation
-import com.ioffeivan.feature.shopping_item.data.mapper.toDomain
-import com.ioffeivan.feature.shopping_item.data.repository.ShoppingItemSyncRepository
+import com.ioffeivan.sync.coordinator.ShoppingItemSyncCoordinator
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -21,39 +18,29 @@ import dagger.assisted.AssistedInject
 internal class ShoppingItemSyncWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val shoppingItemSyncRepository: ShoppingItemSyncRepository,
+    private val shoppingItemSyncCoordinator: ShoppingItemSyncCoordinator,
     private val shoppingItemOutboxDao: ShoppingItemOutboxDao,
-    private val shoppingItemDao: ShoppingItemDao,
-    private val shoppingListDao: ShoppingListDao,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
             shoppingItemOutboxDao.getAllShoppingItemsOutbox()
                 .forEach { outbox ->
-                    val shoppingItemEntity = shoppingItemDao.getShoppingItem(outbox.itemId)
-                    val listServerId =
-                        shoppingListDao.getShoppingList(shoppingItemEntity.listId).serverId ?: 0
-
                     when (outbox.operation) {
                         ShoppingItemOutboxOperation.ADD -> {
-                            shoppingItemSyncRepository.addShoppingItem(
-                                shoppingItemEntity.toDomain(),
-                                listServerId = listServerId,
-                            )
+                            shoppingItemSyncCoordinator.addShoppingItem(outbox.itemId)
                             shoppingItemOutboxDao.deleteShoppingItemOutbox(outbox.id)
                         }
 
+                        // For Operation.DELETE we don't need to explicitly remove the outbox row.
+                        // The FK (shopping_items_outbox.item_id -> shopping_items.id) is defined with
+                        // ON DELETE CASCADE, so deleting the ShoppingItem will automatically remove
+                        // the related shopping_items_outbox row in the database.
                         ShoppingItemOutboxOperation.DELETE -> {
-                            shoppingItemSyncRepository.deleteShoppingItem(
-                                itemLocalId = shoppingItemEntity.id,
-                                itemServerId = shoppingItemEntity.serverId ?: 0,
-                                listServerId = listServerId,
-                            )
+                            shoppingItemSyncCoordinator.deleteShoppingItem(outbox.itemId)
                         }
                     }
                 }
-
 
             Result.success()
         } catch (e: Exception) {

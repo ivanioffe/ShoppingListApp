@@ -1,8 +1,8 @@
 package com.ioffeivan.feature.shopping_item.presentation.shopping_items.utils
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.ioffeivan.feature.shopping_item.domain.model.ShoppingItem
-import com.ioffeivan.feature.shopping_item.domain.model.ShoppingItems
+import com.ioffeivan.core.model.ShoppingItem
+import com.ioffeivan.core.model.ShoppingItems
 
 class ShoppingItemsPreviewParameterProvider : PreviewParameterProvider<ShoppingItems> {
     override val values: Sequence<ShoppingItems>

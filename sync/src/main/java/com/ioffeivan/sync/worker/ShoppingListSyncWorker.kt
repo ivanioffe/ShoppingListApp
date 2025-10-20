@@ -1,18 +1,13 @@
 package com.ioffeivan.sync.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.Constraints
 import androidx.work.CoroutineWorker
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import com.ioffeivan.core.database.dao.ShoppingListDao
 import com.ioffeivan.core.database.dao.ShoppingListOutboxDao
 import com.ioffeivan.core.database.model.ShoppingListOutboxOperation
-import com.ioffeivan.feature.shopping_list.data.mapper.toDomain
-import com.ioffeivan.feature.shopping_list.data.repository.ShoppingListSyncRepository
+import com.ioffeivan.sync.coordinator.ShoppingListSyncCoordinator
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -20,52 +15,33 @@ import dagger.assisted.AssistedInject
 internal class ShoppingListSyncWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val shoppingListSyncRepository: ShoppingListSyncRepository,
+    private val shoppingListSyncCoordinator: ShoppingListSyncCoordinator,
     private val shoppingListOutboxDao: ShoppingListOutboxDao,
-    private val shoppingListDao: ShoppingListDao,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
-            val outboxes = shoppingListOutboxDao.getAllShoppingListsOutbox()
+            shoppingListOutboxDao.getAllShoppingListsOutbox()
+                .forEach { outbox ->
+                    when (outbox.operation) {
+                        ShoppingListOutboxOperation.CREATE -> {
+                            shoppingListSyncCoordinator.createShoppingList(outbox.listId)
+                            shoppingListOutboxDao.deleteShoppingListOutbox(outbox.id)
+                        }
 
-            outboxes.forEach { outbox ->
-                val shoppingListEntity = shoppingListDao.getShoppingList(outbox.listId)
-
-                when (outbox.operation) {
-                    ShoppingListOutboxOperation.CREATE -> {
-                        shoppingListSyncRepository.createShoppingList(shoppingListEntity.toDomain())
-                        shoppingListOutboxDao.deleteShoppingListOutbox(outbox.id)
-                    }
-
-                    // For Operation.DELETE we don't need to explicitly remove the outbox row.
-                    // The FK (shopping_lists_outbox.list_id -> shopping_lists.id) is defined with
-                    // ON DELETE CASCADE, so deleting the ShoppingList will automatically remove
-                    // the related shopping_lists_outbox row in the database.
-                    ShoppingListOutboxOperation.DELETE -> {
-                        shoppingListSyncRepository.deleteShoppingList(
-                            localId = shoppingListEntity.id,
-                            serverId = shoppingListEntity.serverId ?: 0,
-                        )
+                        // For Operation.DELETE we don't need to explicitly remove the outbox row.
+                        // The FK (shopping_lists_outbox.list_id -> shopping_lists.id) is defined with
+                        // ON DELETE CASCADE, so deleting the ShoppingList will automatically remove
+                        // the related shopping_lists_outbox row in the database.
+                        ShoppingListOutboxOperation.DELETE -> {
+                            shoppingListSyncCoordinator.deleteShoppingList(outbox.listId)
+                        }
                     }
                 }
-            }
 
             Result.success()
         } catch (e: Exception) {
             Result.retry()
-        }
-    }
-
-    companion object {
-        fun startUpSyncWork(): OneTimeWorkRequest {
-            return OneTimeWorkRequestBuilder<ShoppingListSyncWorker>()
-                .setConstraints(
-                    Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                        .build()
-                )
-                .build()
         }
     }
 }

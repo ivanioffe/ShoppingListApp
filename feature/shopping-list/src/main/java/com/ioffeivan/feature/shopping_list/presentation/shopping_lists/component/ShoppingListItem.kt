@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.ioffeivan.core.designsystem.icon.PrimaryIcon
 import com.ioffeivan.core.designsystem.icon.PrimaryIcons
 import com.ioffeivan.core.designsystem.preview.PreviewContainer
-import com.ioffeivan.feature.shopping_list.domain.model.ShoppingList
+import com.ioffeivan.core.model.ShoppingList
 import com.ioffeivan.feature.shopping_list.presentation.shopping_lists.ShoppingListsColors
 
 @Composable
@@ -62,7 +62,7 @@ fun ShoppingListItem(
 fun ShoppingListItemPreviewLight() {
     PreviewContainer {
         ShoppingListItem(
-            shoppingList = ShoppingList(0, "Name List", 1),
+            shoppingList = ShoppingList(0, "Name List"),
             onClick = {},
             onDeleteClick = {},
         )
@@ -74,7 +74,7 @@ fun ShoppingListItemPreviewLight() {
 fun ShoppingListItemPreviewDark() {
     PreviewContainer(darkTheme = true) {
         ShoppingListItem(
-            shoppingList = ShoppingList(0, "Name List", 1),
+            shoppingList = ShoppingList(0, "Name List"),
             onClick = {},
             onDeleteClick = {},
         )

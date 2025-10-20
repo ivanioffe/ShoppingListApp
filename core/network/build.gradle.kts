@@ -54,8 +54,8 @@ android {
 
 dependencies {
 
-    implementation(project(":core:common"))
-    implementation(project(":core:datastore-auth"))
+    implementation(projects.core.common)
+    implementation(projects.core.datastoreAuth)
 
     implementation(libs.androidx.core.ktx)
 

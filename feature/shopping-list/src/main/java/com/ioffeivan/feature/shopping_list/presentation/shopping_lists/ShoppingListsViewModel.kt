@@ -3,10 +3,10 @@ package com.ioffeivan.feature.shopping_list.presentation.shopping_lists
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ioffeivan.core.common.Result
+import com.ioffeivan.core.domain.usecase.DeleteShoppingListUseCase
+import com.ioffeivan.core.domain.usecase.ObserveShoppingListsUseCase
+import com.ioffeivan.core.domain.usecase.RefreshShoppingListsUseCase
 import com.ioffeivan.core.ui.utils.withRefreshing
-import com.ioffeivan.feature.shopping_list.domain.usecase.DeleteShoppingListUseCase
-import com.ioffeivan.feature.shopping_list.domain.usecase.ObserveShoppingListsUseCase
-import com.ioffeivan.feature.shopping_list.domain.usecase.RefreshShoppingListsUseCase
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

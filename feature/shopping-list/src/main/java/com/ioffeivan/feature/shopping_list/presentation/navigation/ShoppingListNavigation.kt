@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ioffeivan.feature.shopping_list.domain.model.ShoppingList
+import com.ioffeivan.core.model.ShoppingList
 import com.ioffeivan.feature.shopping_list.presentation.create_shopping_list.CreateShoppingListRoute
 import com.ioffeivan.feature.shopping_list.presentation.shopping_lists.ShoppingListsRoute
 import kotlinx.serialization.Serializable
@@ -20,9 +20,6 @@ data object ShoppingListsRoute
 
 @Serializable
 data object CreateShoppingListRoute
-
-fun NavController.navigateToShoppingList(navOptions: NavOptions? = null) =
-    navigate(route = ShoppingListBaseRoute, navOptions = navOptions)
 
 fun NavController.navigateToCreateShoppingList(navOptions: NavOptions? = null) =
     navigate(route = CreateShoppingListRoute, navOptions = navOptions)

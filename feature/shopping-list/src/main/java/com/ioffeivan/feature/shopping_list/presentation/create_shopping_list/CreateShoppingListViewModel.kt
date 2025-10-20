@@ -2,7 +2,7 @@ package com.ioffeivan.feature.shopping_list.presentation.create_shopping_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ioffeivan.feature.shopping_list.domain.usecase.CreateShoppingListUseCase
+import com.ioffeivan.core.domain.usecase.CreateShoppingListUseCase
 import com.ioffeivan.feature.shopping_list.presentation.create_shopping_list.mapper.toCreateShoppingList
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
