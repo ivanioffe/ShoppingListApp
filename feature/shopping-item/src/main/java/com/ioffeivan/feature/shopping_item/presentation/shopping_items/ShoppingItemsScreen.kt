@@ -47,13 +47,13 @@ import com.ioffeivan.core.designsystem.component.AddFloatingActionButton
 import com.ioffeivan.core.designsystem.icon.PrimaryIcon
 import com.ioffeivan.core.designsystem.icon.PrimaryIcons
 import com.ioffeivan.core.designsystem.preview.PreviewContainer
+import com.ioffeivan.core.model.ShoppingItem
+import com.ioffeivan.core.model.ShoppingItems
 import com.ioffeivan.core.ui.LoadingScreen
 import com.ioffeivan.core.ui.ObserveAsEventsWithLifecycle
 import com.ioffeivan.core.ui.SwipeToDismissContainer
 import com.ioffeivan.core.ui.onDebounceClick
 import com.ioffeivan.feature.shopping_item.R
-import com.ioffeivan.feature.shopping_item.domain.model.ShoppingItem
-import com.ioffeivan.feature.shopping_item.domain.model.ShoppingItems
 import com.ioffeivan.feature.shopping_item.presentation.shopping_items.component.ShoppingItemCard
 import com.ioffeivan.feature.shopping_item.presentation.shopping_items.utils.ShoppingItemsPreviewParameterProvider
 

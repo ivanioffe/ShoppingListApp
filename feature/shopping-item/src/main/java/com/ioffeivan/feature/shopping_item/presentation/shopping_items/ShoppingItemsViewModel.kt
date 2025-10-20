@@ -3,10 +3,10 @@ package com.ioffeivan.feature.shopping_item.presentation.shopping_items
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ioffeivan.core.common.Result
+import com.ioffeivan.core.domain.usecase.DeleteShoppingItemFromShoppingListUseCase
+import com.ioffeivan.core.domain.usecase.ObserveShoppingItemsUseCase
+import com.ioffeivan.core.domain.usecase.RefreshShoppingItemsUseCase
 import com.ioffeivan.core.ui.utils.withRefreshing
-import com.ioffeivan.feature.shopping_item.domain.usecase.DeleteShoppingItemFromShoppingListUseCase
-import com.ioffeivan.feature.shopping_item.domain.usecase.ObserveShoppingItemsUseCase
-import com.ioffeivan.feature.shopping_item.domain.usecase.RefreshShoppingItemsUseCase
 import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -46,8 +46,7 @@ class ShoppingItemsViewModel @AssistedInject constructor(
         .onStart {
             if (listServerId != null) {
                 refreshShoppingItemsUseCase(
-                    listLocalId = listId,
-                    listServerId = listServerId,
+                    listId = listId,
                 )
             }
         }
@@ -92,8 +91,7 @@ class ShoppingItemsViewModel @AssistedInject constructor(
             ) {
                 if (listServerId != null) {
                     refreshShoppingItemsUseCase(
-                        listLocalId = listId,
-                        listServerId = listServerId,
+                        listId = listId,
                     )
                 }
             }

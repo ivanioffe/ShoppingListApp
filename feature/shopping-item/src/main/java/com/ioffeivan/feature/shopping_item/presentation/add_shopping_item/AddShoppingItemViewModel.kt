@@ -2,7 +2,7 @@ package com.ioffeivan.feature.shopping_item.presentation.add_shopping_item
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ioffeivan.feature.shopping_item.domain.usecase.AddShoppingItemToShoppingListUseCase
+import com.ioffeivan.core.domain.usecase.AddShoppingItemToShoppingListUseCase
 import com.ioffeivan.feature.shopping_item.presentation.add_shopping_item.mapper.toShoppingItem
 import dagger.Lazy
 import dagger.assisted.Assisted

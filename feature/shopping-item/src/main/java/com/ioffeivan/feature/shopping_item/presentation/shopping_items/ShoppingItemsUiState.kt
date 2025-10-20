@@ -1,6 +1,6 @@
 package com.ioffeivan.feature.shopping_item.presentation.shopping_items
 
-import com.ioffeivan.feature.shopping_item.domain.model.ShoppingItems
+import com.ioffeivan.core.model.ShoppingItems
 
 data class ShoppingItemsUiState(
     val title: String,
