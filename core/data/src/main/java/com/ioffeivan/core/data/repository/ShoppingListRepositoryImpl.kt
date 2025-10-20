@@ -7,6 +7,7 @@ import com.ioffeivan.core.data.mapper.toShoppingListEntity
 import com.ioffeivan.core.data.source.local.ShoppingListLocalDataSource
 import com.ioffeivan.core.data.source.remote.ShoppingListRemoteDataSource
 import com.ioffeivan.core.data.source.remote.model.ShoppingListsDto
+import com.ioffeivan.core.data.sync.ShoppingListSyncStarter
 import com.ioffeivan.core.database.dao.ShoppingListOutboxDao
 import com.ioffeivan.core.database.model.ShoppingListEntity
 import com.ioffeivan.core.database.model.ShoppingListOutboxEntity
@@ -24,6 +25,7 @@ class ShoppingListRepositoryImpl @Inject constructor(
     private val shoppingListRemoteDataSource: ShoppingListRemoteDataSource,
     private val shoppingListLocalDataSource: ShoppingListLocalDataSource,
     private val shoppingListOutboxDao: ShoppingListOutboxDao,
+    private val shoppingListSyncStarter: ShoppingListSyncStarter,
 ) : ShoppingListRepository {
 
     private val remoteShoppingListsFlow = MutableSharedFlow<Result<ShoppingLists>>(replay = 1)
@@ -77,6 +79,7 @@ class ShoppingListRepositoryImpl @Inject constructor(
                 operation = ShoppingListOutboxOperation.CREATE,
             )
         )
+        shoppingListSyncStarter.startSync()
     }
 
     override suspend fun deleteShoppingList(id: Int) {
@@ -86,6 +89,7 @@ class ShoppingListRepositoryImpl @Inject constructor(
                 operation = ShoppingListOutboxOperation.DELETE,
             )
         )
+        shoppingListSyncStarter.startSync()
     }
 
     override fun observeShoppingLists(): Flow<Result<ShoppingLists>> {
