@@ -34,22 +34,20 @@ class ShoppingItemRepositoryImpl @Inject constructor(
     override suspend fun refreshShoppingItems(listId: Int) {
         val shoppingListServerId = shoppingListLocalDataSource.getShoppingList(listId).serverId
 
-        if (shoppingListServerId != null) {
-            shoppingItemRemoteDataSource.getShoppingItems(shoppingListServerId)
-                .collect { result ->
-                    when (result) {
-                        is Result.Error -> remoteShoppingItemsFlow.emit(Result.Error(result.message))
+        shoppingItemRemoteDataSource.getShoppingItems(shoppingListServerId ?: 0)
+            .collect { result ->
+                when (result) {
+                    is Result.Error -> remoteShoppingItemsFlow.emit(Result.Error(result.message))
 
-                        Result.Loading -> remoteShoppingItemsFlow.emit(Result.Loading)
+                    Result.Loading -> remoteShoppingItemsFlow.emit(Result.Loading)
 
-                        is Result.Success -> {
-                            shoppingItemLocalDataSource.upsertShoppingItems(
-                                result.data.toEntities(listId)
-                            )
-                        }
+                    is Result.Success -> {
+                        shoppingItemLocalDataSource.upsertShoppingItems(
+                            result.data.toEntities(listId)
+                        )
                     }
                 }
-        }
+            }
     }
 
     override suspend fun addShoppingItem(shoppingItem: ShoppingItem) {
