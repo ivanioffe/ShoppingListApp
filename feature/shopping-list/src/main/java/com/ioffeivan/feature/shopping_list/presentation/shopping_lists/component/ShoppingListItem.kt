@@ -62,7 +62,7 @@ fun ShoppingListItem(
 fun ShoppingListItemPreviewLight() {
     PreviewContainer {
         ShoppingListItem(
-            shoppingList = ShoppingList(0, "Name List", 1),
+            shoppingList = ShoppingList(0, "Name List"),
             onClick = {},
             onDeleteClick = {},
         )
@@ -74,7 +74,7 @@ fun ShoppingListItemPreviewLight() {
 fun ShoppingListItemPreviewDark() {
     PreviewContainer(darkTheme = true) {
         ShoppingListItem(
-            shoppingList = ShoppingList(0, "Name List", 1),
+            shoppingList = ShoppingList(0, "Name List"),
             onClick = {},
             onDeleteClick = {},
         )

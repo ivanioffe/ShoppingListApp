@@ -32,7 +32,6 @@ class ShoppingItemsViewModel @AssistedInject constructor(
     private val deleteShoppingItemUseCase: Lazy<DeleteShoppingItemFromShoppingListUseCase>,
     @Assisted val listId: Int,
     @Assisted val listName: String,
-    @Assisted val listServerId: Int?,
 ) : ViewModel() {
 
     private val _shoppingItemsEvent = Channel<ShoppingItemsEvent>()
@@ -44,13 +43,9 @@ class ShoppingItemsViewModel @AssistedInject constructor(
 
     val uiState = observeShoppingItemsUseCase(listId)
         .onStart {
-            if (listServerId != null) {
-                refreshShoppingItemsUseCase(
-                    listId = listId,
-                )
-            }
+            refreshShoppingItemsUseCase(listId = listId)
         }
-        .drop(if (listServerId != null) 1 else 0) // Skip first Loading or Error
+        .drop(1) // Skip first Loading or Error
         .onEach { result ->
             when (result) {
                 is Result.Error -> {
@@ -89,11 +84,7 @@ class ShoppingItemsViewModel @AssistedInject constructor(
                 startRefreshingAction = { _isRefreshing.value = true },
                 endRefreshingAction = { _isRefreshing.value = false },
             ) {
-                if (listServerId != null) {
-                    refreshShoppingItemsUseCase(
-                        listId = listId,
-                    )
-                }
+                refreshShoppingItemsUseCase(listId = listId)
             }
         }
     }
@@ -109,7 +100,6 @@ class ShoppingItemsViewModel @AssistedInject constructor(
         fun create(
             listId: Int,
             listName: String,
-            listServerId: Int?,
         ): ShoppingItemsViewModel
     }
 }
